@@ -1,0 +1,88 @@
+# Minimal Zsh configuration
+# Set ZSH theme before any plugin loads
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="jonathan"
+
+# Source Zsh and oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+source ~/.local/share/zinit/zinit.git/zinit.zsh
+
+
+# Initialize Zsh completion system
+autoload -U compinit
+compinit
+
+# Load Zsh completions
+#
+# Aliases
+alias ls='eza -a --icons'
+alias ll='eza -al --icons'
+alias lt='eza -a --tree --level=1 --icons'
+alias code='code --enable-features=UseOzonePlatform --ozone-platform=wayland'
+alias sysup='sudo pacman -Syu'
+alias sysclean='sudo pacman -Rns $(pacman -Qdtq)'
+alias cls="clear"
+alias zshconfig="nano ~/.zshrc"
+alias reload="source ~/.zshrc"
+alias nano='zeditor'
+alias ..="cd .."
+alias ...="cd ../.."
+alias stepheybot="ssh -i /home/stephey/.ssh/id_ed25519 -p 1993 'stephey@stepheybot.com'"
+
+# SSHFS check and mount
+if ! mountpoint -q /mnt/stepheybot; then
+    sshfs -o IdentityFile=/home/stephey/.ssh/id_ed25519 -p 1993 stephey@stepheybot.com:/home/stephey /mnt/stepheybot &
+fi
+
+# Zsh history settings
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt APPEND_HISTORY
+setopt CORRECT
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+
+export PATH="/usr/local/bin:$PATH"
+
+# Optimize zsh completions
+zstyle ':completion:*' rehash true
+
+# Load Zinit
+## Load Zinit plugins
+zinit light-mode for \
+    mafredri/zsh-async \
+    rupa/z \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust \
+    zsh-users/zsh-completions \
+    zsh-users/zsh-autosuggestions \
+#
+
+# Load Oh My Zsh plugin snippets via Zinit
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/1password/1password.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/archlinux/archlinux.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/autojump/autojump.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/command-not-found/command-not-found.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/copyfile/copyfile.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/extract/extract.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/fzf/fzf.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git-auto-fetch/git-auto-fetch.plugin.zsh
+
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/themes/themes.plugin.zsh
+zinit snippet https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/z/z.plugin.zsh
+
+
+
+# Load Hitchhiker plugin manually
+source ~/.oh-my-zsh/custom/plugins/hitchhiker/hitchhiker.plugin.zsh
+
+# Load zsh-syntax-highlighting last
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
+
+export XAUTHORITY=~/.Xauthority
+export DISPLAY=:0
